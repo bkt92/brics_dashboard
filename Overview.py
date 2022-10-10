@@ -66,6 +66,7 @@ st.line_chart(data[options].loc[d1:d2, :])
 #st.line_chart(data_returns.add(1).cumprod().loc[d1:d2, :])
 
 # Correlation plot
+st.markdown("#### On return series:")
 col1_2, col2_2 = st.columns(2)
 
 Ind_corr = data_returns.loc[d1:d2, :].corr()

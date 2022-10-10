@@ -51,9 +51,15 @@ st.write("#### USD/BRL Exchange rate:")
 data = ma_calc(data,currency)
 
 options.append(currency)
-st.line_chart(data[options].loc[d1:d2, :])
-
-st.write("#### Histogram with boxplot:")
+col1_2, col2_2 = st.columns([3, 1])
+with col1_2:
+    st.write("**Exchange rate:**")
+    st.line_chart(data[options].loc[d1:d2, :])
+with col2_2:
+    st.write("**Return:**")
+    st.line_chart(data_returns[[currency]].loc[d1:d2, :])
+    
+st.markdown("#### Histogram with boxplot:")
 fig = px.histogram(data_returns[[currency]], x=currency, marginal="box")
 st.plotly_chart(fig)
     #,use_container_width=True)
