@@ -62,8 +62,8 @@ with col2_1:
 st.line_chart(data[options].loc[d1:d2, :])
 
 # Cumulated return plot
-st.markdown("#### Cumulated return:")
-st.line_chart(data_returns.add(1).cumprod().loc[d1:d2, :])
+#st.markdown("#### Cumulated return:")
+#st.line_chart(data_returns.add(1).cumprod().loc[d1:d2, :])
 
 # Correlation plot
 col1_2, col2_2 = st.columns(2)
