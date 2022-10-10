@@ -54,6 +54,7 @@ ax.set_ylabel('BRL')
 
 st.pyplot(fig)
 
+st.line_chart(data_returns[['BRL=X']])
 fig1 = plt.figure()
 sns.histplot(data = data_returns[['BRL=X']], kde = True)
 #ax1.title('BRL Return')
