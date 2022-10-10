@@ -91,3 +91,16 @@ with col1_2:
 with col2_2:
     st.markdown("#### Correlation matrix")
     st.pyplot(fig)
+
+st.markdown("#### Basic statistical measures:")
+    
+describe_data_return = data_returns.loc[d1:d2, :].describe()
+describe_data_return.loc['median'] = data_returns.loc[d1:d2, :].median()
+kurtosis = pd.Series(sp.stats.kurtosis(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+kurtosis.index = data_returns.columns[0:]
+describe_data_return.loc['kurtosis'] = kurtosis
+skewness = pd.Series(sp.stats.skew(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+skewness.index = data_returns.columns[0:]
+describe_data_return.loc['skewness'] = skewness
+
+st.write(describe_data_return)
