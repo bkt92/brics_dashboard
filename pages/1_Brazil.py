@@ -54,7 +54,7 @@ ax.set_ylabel('BRL')
 
 st.pyplot(fig)
 
-fig1, ax1 = plt.subplots()
-ax1 = sns.histplot(data = data_returns[['BRL=X']], kde = True)
+fig1 = plt.figure()
+sns.histplot(data = data_returns[['BRL=X']], kde = True)
 #ax1.title('BRL Return')
 st.pyplot(fig1)
