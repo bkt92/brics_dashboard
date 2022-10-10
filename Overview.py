@@ -61,13 +61,49 @@ with col2_1:
 
 st.line_chart(data[options].loc[d1:d2, :])
 
-# Cumulated return plot
-#st.markdown("#### Cumulated return:")
-#st.line_chart(data_returns.add(1).cumprod().loc[d1:d2, :])
-
 # Correlation plot
+col1_3, col2_3 = st.columns(2)
+
+Ind_corr1 = data.loc[d1:d2, :].corr()
+plt.figure(figsize=(7,7))
+sns.color_palette("coolwarm", as_cmap=True)
+mask = np.triu(np.ones_like(Ind_corr1.corr()))
+fig11, ax11 = plt.subplots()
+ax11 = sns.heatmap(Ind_corr1, annot = True, center=0, cmap="coolwarm", mask=mask)
+
+Ind_cov1 = data_returns.loc[d1:d2, :].cov()
+plt.figure(figsize=(7,7))
+sns.color_palette("coolwarm", as_cmap=True)
+mask = np.triu(np.ones_like(Ind_cov1.corr()))
+fig12, ax12 = plt.subplots()
+ax12 = sns.heatmap(Ind_cov1, annot = True, center=0, cmap="coolwarm", mask=mask)
+
+with col1_3:
+    st.markdown("##### Covariance matrix")
+    st.pyplot(fig12)
+
+with col2_3:
+    st.markdown("##### Correlation matrix")
+    st.pyplot(fig11)
+
+st.markdown("##### Basic statistical measures:")
+    
+describe_data = data.loc[d1:d2, :].describe()
+describe_data.loc['median'] = data.loc[d1:d2, :].median()
+kurtosis1 = pd.Series(sp.stats.kurtosis(data.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+kurtosis1.index = data.columns[0:]
+describe_data.loc['kurtosis'] = kurtosis1
+skewness1 = pd.Series(sp.stats.skew(data.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+skewness1.index = data.columns[0:]
+describe_data.loc['skewness'] = skewness1
+
+st.write(describe_data)
+
+
 st.markdown("#### On return series:")
-col1_2, col2_2 = st.columns(2)
+st.line_chart(data_returns[options].loc[d1:d2, :])
+# Correlation plot
+col1_3, col2_3 = st.columns(2)
 
 Ind_corr = data_returns.loc[d1:d2, :].corr()
 plt.figure(figsize=(7,7))
@@ -84,23 +120,23 @@ mask = np.triu(np.ones_like(Ind_cov.corr()))
 fig1, ax1 = plt.subplots()
 ax1 = sns.heatmap(Ind_cov, annot = True, center=0, cmap="coolwarm", mask=mask)
 
-with col1_2:
-    st.markdown("#### Covariance matrix")
+with col1_3:
+    st.markdown("##### Covariance matrix")
     st.pyplot(fig1)
 
-with col2_2:
-    st.markdown("#### Correlation matrix")
+with col2_3:
+    st.markdown("##### Correlation matrix")
     st.pyplot(fig)
 
-st.markdown("#### Basic statistical measures:")
+st.markdown("##### Basic statistical measures:")
     
 describe_data_return = data_returns.loc[d1:d2, :].describe()
 describe_data_return.loc['median'] = data_returns.loc[d1:d2, :].median()
-kurtosis = pd.Series(sp.stats.kurtosis(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
-kurtosis.index = data_returns.columns[0:]
-describe_data_return.loc['kurtosis'] = kurtosis
-skewness = pd.Series(sp.stats.skew(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
-skewness.index = data_returns.columns[0:]
-describe_data_return.loc['skewness'] = skewness
+kurtosis2 = pd.Series(sp.stats.kurtosis(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+kurtosis2.index = data_returns.columns[0:]
+describe_data_return.loc['kurtosis'] = kurtosis2
+skewness2 = pd.Series(sp.stats.skew(data_returns.loc[d1:d2, :].select_dtypes(exclude=['object']).to_numpy()))
+skewness2.index = data_returns.columns[0:]
+describe_data_return.loc['skewness'] = skewness2
 
 st.write(describe_data_return)
