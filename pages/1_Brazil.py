@@ -1,12 +1,34 @@
 import streamlit as st
 import numpy as np
+import scipy as sp
 import datetime
 from dateutil.relativedelta import relativedelta
 import matplotlib.pyplot as plt
 import seaborn as sns
+from my_func import *
+import plotly.express as px
 
+currency = 'BRL=X'
 st.markdown("# Brazil")
 st.write("This page provied detail statistical analysis about Brazil forex market")
+
+# Initialization data
+# Download data
+if 'data' not in st.session_state:
+    st.session_state['data'] = data_download('BRL=X,RUB=X,INR=X,CNY=X,ZAR=X', '12y')
+data = st.session_state['data']
+# Calculate return series
+if 'data_returns' not in st.session_state:
+    st.session_state['data_returns'] = calc_return(data)
+data_returns = st.session_state['data_returns']
+
+with st.sidebar:
+    st.markdown("##### Data cleaning: ")
+    outlier = st.checkbox('Remove Outlier')    
+    if outlier:
+        data = data.dropna()
+        data = data[(np.abs(sp.stats.zscore(data)) < 3).all(axis=1)]
+        data_returns = calc_return(data)
 
 # Plot the data series
 col1_1, col2_1 = st.columns(2)
@@ -24,38 +46,15 @@ with col2_1:
     d2 = st.date_input(
     "End date:",
     datetime.date.today())
-    
-data = st.session_state['data']
-data_returns = st.session_state['data_returns']
 
-i100day_SMA = data[['BRL=X']].rolling(window=100).mean()
-i100day_EMA = data[['BRL=X']].ewm(span=100, adjust=False).mean()
-i20day_SMA = data[['BRL=X']].rolling(window=20).mean()
-i20day_EMA = data[['BRL=X']].ewm(span=20, adjust=False).mean()
+st.write("#### USD/BRL Exchange rate:")
+data = ma_calc(data,currency)
 
-fig, ax = plt.subplots()
-#figsize=(10,10)
-ax.plot(data.loc[d1:d2, :].index, data.loc[d1:d2, 'BRL=X'], label='Idx')
-if "SMA100" in options:
-    ax.plot(i100day_SMA.loc[d1:d2, :].index, i100day_SMA.loc[d1:d2, 'BRL=X'], 
-        label = '100-days SMA',linestyle= '--') 
-if "EMA100" in options:
-    ax.plot(i100day_EMA.loc[d1:d2, :].index, i100day_EMA.loc[d1:d2, 'BRL=X'], 
-        label = '100-days SMA',linestyle= '--')         
-if "SMA20" in options:
-    ax.plot(i20day_SMA.loc[d1:d2, :].index, i20day_SMA.loc[d1:d2, 'BRL=X'], 
-        label = '20-days SMA',linestyle= '--')
-if "EMA20" in options:
-    ax.plot(i20day_EMA.loc[d1:d2, :].index, i20day_EMA.loc[d1:d2, 'BRL=X'], 
-        label = '20-days EMA',linestyle= ':', color = 'k')
+options.append(currency)
+st.line_chart(data[options].loc[d1:d2, :])
 
-ax.legend(loc='best')
-ax.set_ylabel('BRL')
+st.write("#### Histogram with boxplot:")
+fig = px.histogram(data_returns[[currency]], x=currency, marginal="box")
+st.plotly_chart(fig)
+    #,use_container_width=True)
 
-st.pyplot(fig)
-
-st.line_chart(data_returns[['BRL=X']])
-fig1 = plt.figure()
-sns.histplot(data = data_returns[['BRL=X']], kde = True)
-#ax1.title('BRL Return')
-st.pyplot(fig1)
