@@ -24,7 +24,7 @@ data_returns = st.session_state['data_returns']
 
 # Current price and prediction
 current_price = data_download('BRL=X,RUB=X,INR=X,CNY=X,ZAR=X', '3d').dropna()
-st.markdown("#### Current rate and prediction (up/down compare to current price):")
+st.markdown("#### Current rate and prediction (up/down):")
 col1_0, col2_0, col3_0, col4_0, col5_0 = st.columns(5)
 col1_0.metric("BRL", np.round(current_price[['BRL=X']].iloc[-1].to_numpy(),2), "1%")
 col2_0.metric("RUB", np.round(current_price[['RUB=X']].iloc[-1].to_numpy(),2), "-8%")

@@ -10,7 +10,7 @@ import plotly.express as px
 
 currency = 'BRL=X'
 st.markdown("# Brazil")
-st.write("This page provied detail statistical analysis about Brazil forex market")
+st.write("This page provied detail statistical analysis about Brazil USD/BRL pair")
 
 # Initialization data
 # Download data
